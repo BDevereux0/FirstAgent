@@ -1,6 +1,5 @@
 from ollama import chat
 from ollama import ChatResponse
-from sympy import content
 
 
 class AgentCall:
@@ -11,27 +10,24 @@ class AgentCall:
         self.model_message_history = []
 
     def callAgent(self) -> ChatResponse:
-        print(self.messages)
-
         return chat(
             model= "llama3.1:8b",
             messages=self.messages,
             tools=self.tools
         )
 
+    #constructs messages by adding each previous message to the model call, so it knows what we've been
+    #talking about
     def construct_message(self):
-        system_message = {
-            'role': 'system',
-            'content': 'Ignore tools unless the prompts are related to files. '
-                       'Give a direct answer with your own reasoning.'
-                       'Do not create your own tools'
-                       'You are an LLM and my virtual assistant.'
-        }
-
         self.messages = [
-            system_message,
-            #the * means take every elemt from self.message_history and put each one into this new list
-            *self.message_history
+             {                  'role': 'system',
+                                 'content': 'Always respond with text, not just a tool response'
+                                            'Give a direct answer with your own reasoning.'
+                                            'Do not create your own tools'
+                                            'You are an LLM and my virtual assistant.'},
+
+            #the * means take every element from self.message_history and put each one into this new list
+            *reversed(self.message_history)
         ]
 
     def add_tools(self, tools:list):

@@ -1,0 +1,6 @@
+I want to:
+
+Have my agent find a file
+Read directory
+fill out a PDF
+ so it will need to: understand what is in the PDF, fill it out, output a PDF
