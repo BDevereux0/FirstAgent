@@ -1,39 +1,42 @@
 from ollama import ChatResponse, chat
 
+from modelCommunication.AgentCall import AgentCall
+from modelCommunication.MessageBuilder import MessageBuilder
 from tools.CompleteToolList import CompleteToolList
 
 
 class RouterAgent:
-    tools = CompleteToolList()
 
-    def __init__(self):
-       self.message = [{'role' : 'user', 'content' : 'This text should be changed'}]
-       self.message_to_router = ''
+    def __init__(self, agent_call: AgentCall):
+        self.agent_call = agent_call
 
-    def build_message(self, user_message: str):
-        self.message_to_router = [{'role' : 'user', 'content' : user_message}]
+    def call_model(self, user_messages):
+        builder = MessageBuilder()
+        tools = CompleteToolList()
+        message = builder.create_system_prompt(f"""
+        You are a tool-routing agent.
 
-    def call_router_agent(self) -> ChatResponse:
-        return chat (
-            model ="llama3.1:8b",
-            format="json",
-            messages = [ {'role' : 'system',
-        'content': f'''You are a router agent. Your role is to determine if a tool is needed.
-                   Available tools:
-                    Find File : Lets a user find a file in the current directory.
-                    If the prompt contains a word related to a tool, output: the name of the tool.
-                   
-                    Your output must be JSON:
-                    "tool needed: true"
-                    "tool name": "find_file"
-                     
-                    If the prompt does NOT contain a word related to a tool, 
-                    Your output JSON:
-                    "tool needed: false"
-                    "response": "your response"
-    
-                    '''
-                   } , *self.message_to_router]
-        )
+        Your task is to determine whether the user's request
+        requires one of the available tools.
+
+        Available tools:
+        {tools.tool_description}
+
+        Rules:
+        1. Select a tool only when the user requests an action
+            that the tool can perform.
+        2. If no tool is appropriate, return null.
+        3. Never invent tool names.
+        4. Return only valid JSON. No explanations.
+
+        Output format:
+        {{
+        "tool": "find_file" | null,
+        "content": "original user request"
+        }} 
+        """).create_conversation_prompt(user_messages).build()
+
+        return self.agent_call.router_call_agent(message)
 
 
+#  {tools.tool_list} is an example of adding a variable into a string. notice the f""" text {var} text """

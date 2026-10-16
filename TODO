@@ -1,6 +1,3 @@
-I want to:
-
-Have my agent find a file
-Read directory
-fill out a PDF
- so it will need to: understand what is in the PDF, fill it out, output a PDF
+The router's JSON key doesn't match the check. AgentApplication.py:29 checks .get("tools"), but the
+prompt at agents/RouterAgent.py:36-39 asks for "tools needed". That example also isn't valid JSON, since each
+line is one string instead of a "key": "value" pair. As a result, every message goes to the conversation agent.

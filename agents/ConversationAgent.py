@@ -8,11 +8,13 @@ class ConversationAgent:
 
     def call_model(self, user_messages:str):
         builder = MessageBuilder()
-        messages = (builder.create_system_prompt("""
-        you are a conversation agent.""")
+        messages = (builder.create_system_prompt(
+            """you are a conversation agent.
+            Always response using this JSON structure:
+            {
+                "Answer": "Model response"
+            }""")
         .create_conversation_prompt(user_messages)
         .build())
-
-        print(messages)
 
         return self.agent_call.call_agent(messages)

@@ -1,3 +1,4 @@
+from tools.CompleteToolList import CompleteToolList
 
 
 class MessageBuilder:
@@ -15,10 +16,12 @@ class MessageBuilder:
         return self
 
     def create_conversation_prompt(self, conversation_user_prompt:str):
-       self.messages.append({'role' : 'user',
+       self.messages.append(
+           {'role' : 'user',
           'content': conversation_user_prompt
        })
        return self
+
 
     #this will cause the caller to receive a list of the built prompts.
     def build(self):

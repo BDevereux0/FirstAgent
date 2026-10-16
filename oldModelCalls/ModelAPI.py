@@ -4,9 +4,10 @@ from ollama import ChatResponse
 response: ChatResponse = chat(model='llama3.1:8b', messages=[
     {
         'role': 'user',
-        'content': 'What is 2 + 2?'
+        'content': 'Why is the sky blue?'
     },
 ])
+
 print(response['message']['content'])
 
 #print(response.message.content)

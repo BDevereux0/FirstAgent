@@ -1,18 +1,31 @@
 from ollama import chat
 from ollama import ChatResponse
+from sympy import false
+
+from tools.CompleteToolList import CompleteToolList
 
 
 class AgentCall:
     #None = none makes the tools param optional
     def __init__(self,tools: list | None = None):
-        self.tools = tools
-        self.messages = []
+        self.tools = CompleteToolList().tools
 
-    def call_agent(self, messages: list) -> ChatResponse:
-
+    def call_agent(self, user_messages: list) -> ChatResponse:
+        print(self.tools)
         return chat(
-            model= "llama3.1:8b",
-            messages=self.messages,
+            model= "qwen3.5:9b",
+            messages=user_messages,
             tools=self.tools,
-            format="json"
+            think=False
+        )
+    #Added this second one because the ollama docs say that the model will heavely favor
+    #a tool response if they are present in the model call.
+    def router_call_agent(self, user_messages:list) -> ChatResponse:
+        tools = CompleteToolList()
+        tool_list = tools.tools
+        return chat(
+            model = "qwen3.5:9b",
+            messages=user_messages,
+            format="json",
+            think=False
         )
