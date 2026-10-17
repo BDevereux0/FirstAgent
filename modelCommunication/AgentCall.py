@@ -11,7 +11,6 @@ class AgentCall:
         self.tools = CompleteToolList().tools
 
     def call_agent(self, user_messages: list) -> ChatResponse:
-        print(self.tools)
         return chat(
             model= "qwen3.5:9b",
             messages=user_messages,

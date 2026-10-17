@@ -1,8 +1,5 @@
 from ollama import ChatResponse
 
-from agents.ConversationAgent import ConversationAgent
-from agents.RouterAgent import RouterAgent
-from agents.ToolAgent import ToolAgent
 from tools.CompleteToolList import CompleteToolList
 from utils.agent_response_parser import response_parser
 
@@ -45,6 +42,7 @@ class AgentApplication:
         print("tool")
         tools = CompleteToolList()
 
+
         for tool in tool_response.message.tool_calls:
             # := is the walrus operator it does:
             # 1. Assigns a value (in this case to function_to_call
@@ -53,7 +51,8 @@ class AgentApplication:
                 output = function_to_call(**tool.function.arguments)
                 print(output)
             else:
-                output = 'Function not found'
+                print(function_to_call)
+                output_fail = 'Function not found'
+                print(output_fail)
 
-        print("fk me running")
 

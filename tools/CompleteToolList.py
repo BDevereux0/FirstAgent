@@ -6,4 +6,4 @@ class CompleteToolList:
         #don't invoke the function, using (), just do the name.
         self.tools = [find_file]
         self.tool_description = {'find file' : 'finds a file from this projects root directory'}
-        self.available_functions = {'find file': find_file}
+        self.available_functions = {'find_file': find_file}
